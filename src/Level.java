@@ -127,9 +127,12 @@ public class Level
 
     public void update()
     {
-        player.collisionHandler();
+        player.groundCollision();
+        for(int i = 0; i < objects.length; i++)
+            player.collisionHandler(objects[i].getType(), objects[i].getHitbox());
         player.update();
 
+        //update level dynamic objects
         for(int i = groupsNr + staticObjsNr; i < groupsNr + staticObjsNr + dynamicObjsNr; i++)
         {
             objects[i].update();

@@ -8,7 +8,7 @@ public class Player extends GameObj
 
     private int radius = 20;
     private int rotationAngle = 0;
-    private double velocity[] = {0, 0, 0}; //x axis, y axis, rotation angle
+    private double[] velocity = {0, 0, 0}; //x axis, y axis, rotation angle
     private double gravity = 0.3;
     private boolean isGrounded = false;
 
@@ -87,7 +87,24 @@ public class Player extends GameObj
         g2d.setTransform(a);
     }
 
-    public void collisionHandler()
+    public void collisionHandler(Type type, HitBox h)
+    {
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width)//above or below
+        {
+            boolean tmp = isGrounded;
+            isGrounded = false;
+            if(shape.posy + radius >= h.posy - 1 && shape.posy < h.posy)
+            {
+                isGrounded = true;
+                if(velocity[1] > 4)
+                    velocity[1] *= -0.5;
+            }
+            else
+                isGrounded = tmp;
+        }
+    }
+
+    public void groundCollision()
     {
         isGrounded = false;
         if(shape.posy+radius >= Game.height-1)
@@ -104,7 +121,7 @@ public class Player extends GameObj
             velocity[1] = velocity[1] + gravity;
 
         shape.posx += velocity[0];
-        if(!isGrounded || (isGrounded && velocity[1] < 0))
+        if(!isGrounded || (velocity[1] < 0))
             shape.posy += velocity[1];
         rotationAngle += velocity[2];
     }

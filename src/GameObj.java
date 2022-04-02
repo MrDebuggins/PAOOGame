@@ -25,6 +25,7 @@ public class GameObj
 
     public void setType(Type type){if(this.type == Type.DEFAULT){this.type = type;}}
     public Type getType(){return type;}
+    public HitBox getHitbox(){return shape;}
     public void update(){}
 }
 
