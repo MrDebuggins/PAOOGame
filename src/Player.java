@@ -89,30 +89,43 @@ public class Player extends GameObj
 
     public void collisionHandler(Type type, HitBox h)
     {
-        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width)//above or below
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width)
         {
-            boolean tmp = isGrounded;
-            isGrounded = false;
             if(shape.posy + radius >= h.posy - 1 && shape.posy < h.posy)
             {
                 isGrounded = true;
                 if(velocity[1] > 4)
                     velocity[1] *= -0.5;
             }
-            else
-                isGrounded = tmp;
+            else if(shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)
+            {
+                velocity[1] *= -0.2;
+            }
+        }
+        else if(shape.posy >= h.posy && shape.posy <= h.posy + h.height)
+        {
+            if(shape.posx + radius >= h.posx - 1 && shape.posx < h.posx && velocity[0] > 0)
+            {
+                velocity[0] = 0;
+                velocity[2] = 0;
+            }
+            else if(shape.posx - radius <= h.posx + h.width + 1 && shape.posx > h.posx + h.width && velocity[0] < 0)
+            {
+                velocity[0] = 0;
+                velocity[2] = 0;
+            }
         }
     }
 
     public void groundCollision()
     {
         isGrounded = false;
-        if(shape.posy+radius >= Game.height-1)
-        {
-            isGrounded = true;
-            if(velocity[1] > 4)
-                velocity[1] *= -0.5;
-        }
+//        if(shape.posy+radius >= Game.height-1)
+//        {
+//            isGrounded = true;
+//            if(velocity[1] > 4)
+//                velocity[1] *= -0.5;
+//        }
     }
 
     public void update()

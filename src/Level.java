@@ -65,10 +65,9 @@ public class Level
         else
         {
             int type;
-            HitBox h = new HitBox();
             for(int i = 0; i < groupsNr; i++)
             {
-
+                HitBox h = new HitBox();
                 type = scn.nextInt();
                 h.posx = scn.nextInt();
                 h.posy = scn.nextInt();
@@ -88,9 +87,9 @@ public class Level
         else
         {
             int type;
-            HitBox h = new HitBox();
             for(int i = groupsNr; i < groupsNr + staticObjsNr; i++)
             {
+                HitBox h = new HitBox();
                 type = scn.nextInt();
                 h.posx = scn.nextInt();
                 h.posy = scn.nextInt();
@@ -110,9 +109,9 @@ public class Level
         else
         {
             int type;
-            HitBox h = new HitBox();
             for(int i = groupsNr + staticObjsNr; i < groupsNr + staticObjsNr + dynamicObjsNr; i++)
             {
+                HitBox h = new HitBox();
                 type = scn.nextInt();
                 h.posx = scn.nextInt();
                 h.posy = scn.nextInt();
@@ -141,11 +140,11 @@ public class Level
 
     public void render(Graphics g)
     {
-        player.render(g);
-
-        for(int i = 0; i < groupsNr + staticObjsNr + dynamicObjsNr; i++)
+        for(int i = 0; i < objects.length; i++)
         {
             objects[i].render(g);
         }
+
+        player.render(g);
     }
 }
