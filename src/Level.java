@@ -126,7 +126,7 @@ public class Level
 
     public void update()
     {
-        player.groundCollision();
+        player.movementHandler();
         for(int i = 0; i < objects.length; i++)
             player.collisionHandler(objects[i].getType(), objects[i].getHitbox());
         player.update();

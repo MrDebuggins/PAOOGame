@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class HitBox
 {
     public double posx, posy;

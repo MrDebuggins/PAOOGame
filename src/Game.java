@@ -1,5 +1,5 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Graphics;
 
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -23,12 +23,14 @@ public class Game extends JPanel
 
             @Override
             public void keyPressed(KeyEvent e) {
-                lvl.player.movementHandler(0, e);
+                lvl.player.inputHandler(0, e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                lvl.player.movementHandler(1, e);
+                lvl.player.inputHandler(1, e);
+                if(Main.lol)
+                    System.out.println(Main.lol);
             }
         });
     }
