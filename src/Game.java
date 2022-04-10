@@ -6,7 +6,6 @@ import java.awt.geom.AffineTransform;
 
 public class Game extends JPanel
 {
-    AffineTransform at;
     Level lvl;
     public static int width = 784;
     public static int height = 361;
@@ -29,8 +28,6 @@ public class Game extends JPanel
             @Override
             public void keyReleased(KeyEvent e) {
                 lvl.player.inputHandler(1, e);
-                if(Main.lol)
-                    System.out.println(Main.lol);
             }
         });
     }
@@ -50,5 +47,7 @@ public class Game extends JPanel
     public void update()
     {
         lvl.update();
+        width = getWidth();
+        height = getHeight();
     }
 }
