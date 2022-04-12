@@ -171,24 +171,15 @@ public class Player extends GameObj
         double v1 = y-velocity[1];
         double b = twoPointsDist(v0, v1, shape.posx, shape.posy);
         double d = twoPointsDist(shape.posx, shape.posy, x, y);
-        double s = (vel2-b*b-d*d)/(-2*d);
+        double s = (b*b+d*d-vel2)/(2*d);
         double coef = s/d;
         double px = shape.posx + coef*(x-shape.posx);
         double py = shape.posy + coef*(y-shape.posy);
-        double forcex = px-v0;
-        double forcey = py-v1;
+        double forcex = 2*(px-v0);
+        double forcey = 2*(py-v1);
 
-        velocity[0] = forcex+forcex;
-        velocity[1] = forcey+forcey;
-
-
-//        x -= c*(x-shape.posx);
-//        y -= c*(y-shape.posy);
-//        double v0 = x - velocity[0];
-//        double v1 = y - velocity[1];
-//
-//        velocity[0] = (shape.posx - v0) * 2;
-//        velocity[1] = (shape.posy - v1) * 2;
+        velocity[0] = (v0+forcex-x);
+        velocity[1] = (v1+forcey-y);
 
         posUpdated = false;
     }
