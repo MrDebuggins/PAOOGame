@@ -1,17 +1,18 @@
-import java.awt.*;
+
 
 public class DynamicObj extends GameObj
 {
     private int distance, passedDist;
-    private double speed;
+    private double speed = 2;
     private boolean direction;
 
-    public DynamicObj()
+    public DynamicObj(HitBox h, int d, boolean dir)
     {
-        type = Type.DAMAGE;
+        type = Type.ENEMY;
+        shape = h;
+        distance = d;
+        direction = dir;
         passedDist = 0;
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        texture = tk.getImage("assets/dyn_thorn.png");
     }
 
     @Override
@@ -22,12 +23,12 @@ public class DynamicObj extends GameObj
             if(direction)
             {
                 shape.posx += speed;
-                passedDist += Math.sqrt(speed * speed);
+                passedDist += Math.sqrt(speed*speed);
             }
             else
             {
                 shape.posy += speed;
-                passedDist += Math.sqrt(speed * speed);
+                passedDist += Math.sqrt(speed*speed);
             }
         }
         else

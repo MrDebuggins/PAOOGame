@@ -13,16 +13,16 @@ public class Level
     public Level(int id)
     {
         loadLevel(id);
-        player = player.getInstance();
+        player = new Player();
     }
 
     /**
-     * Returns 0 if loaded successfully, -1 if file not found, 1, 2 or 3 for wrong numbers of groups,
+     * Returns 0 if loaded successfully, -1 if file not found error, 1, 2 or 3 for wrong number of groups,
      * static objects and dynamic objects respectively
      * @param id level number
      * @return error code
      */
-    public int loadLevel(int id)
+    private int loadLevel(int id)
     {
         Scanner scn;
 
@@ -89,13 +89,15 @@ public class Level
             int type;
             for(int i = groupsNr; i < groupsNr + staticObjsNr; i++)
             {
+                if(i == 6)
+                    System.out.println();
                 HitBox h = new HitBox();
                 type = scn.nextInt();
                 h.posx = scn.nextInt();
                 h.posy = scn.nextInt();
                 h.width = scn.nextInt();
                 h.height = scn.nextInt();
-                objects[i] = new BlockGroup(Type.values()[type], h);
+                objects[i] = new GameObj(Type.values()[type], h);
             }
         }
 
@@ -117,7 +119,14 @@ public class Level
                 h.posy = scn.nextInt();
                 h.width = scn.nextInt();
                 h.height = scn.nextInt();
-                objects[i] = new BlockGroup(Type.values()[type], h);
+                int d = scn.nextInt();
+                int dir = scn.nextInt();
+                boolean direction;
+                if(dir == 0)
+                    direction = false;
+                else
+                    direction = true;
+                objects[i] = new DynamicObj(h, d, direction);
             }
         }
 
@@ -128,7 +137,9 @@ public class Level
     {
         player.movementHandler();
         for(int i = 0; i < objects.length; i++)
-            player.collisionHandler(objects[i].getType(), objects[i].getHitbox());
+        {
+            objects[i].accept(player);
+        }
         player.update();
 
         //update level dynamic objects

@@ -1,17 +1,19 @@
 import javax.swing.JPanel;
-import java.awt.Graphics;
+import java.awt.*;
 
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 
 public class Game extends JPanel
 {
-    Level lvl;
+    private Level lvl;
+    public TextureManager textureManager;
     public static int width = 784;
     public static int height = 361;
 
     Game() throws java.awt.HeadlessException
     {
+        textureManager = new TextureManager();
         lvl = new Level(1);
 
         addKeyListener(new KeyListener() {

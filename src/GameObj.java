@@ -1,10 +1,10 @@
 import java.awt.*;
 
-public class GameObj
+public class GameObj implements Element
 {
     protected HitBox shape;
-    protected Image texture;
     protected Type type = Type.DEFAULT;
+    protected boolean active = true;
 
     public GameObj()
     {
@@ -19,8 +19,18 @@ public class GameObj
 
     public void render(Graphics g)
     {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(texture, (int)shape.posx, (int)shape.posy, shape.width, shape.height, null);
+        if(active)
+            TextureManager.renderTexture(g, type,shape, 0);
+    }
+
+    public void accept(Player p)
+    {
+        if(active)
+            p.visitGameObj(this);
+    }
+    public void collided()
+    {
+
     }
 
     public void setType(Type type){if(this.type == Type.DEFAULT){this.type = type;}}
@@ -31,16 +41,21 @@ public class GameObj
 
 enum Type
 {
-    DEFAULT,
-    RECTANGLE,
-    BOUNCE_RECTANGLE,
+    PLAYER_SMALL,
+    PLAYER_BIG,
+    BLOCK,
+    BOUNCE_BLOCK,
     TRIANGLE,
     RTRIANGLE,
     WATER,
-    RESHAPE,
-    DAMAGE,
-    CHECKPOINT,
+    PUMPER,
+    DEFLATTER,
+    THORN,
+    ENEMY,
+    CHECKPOINT1,
+    CHECKPOINT2,
     LIFE,
     RING,
     END_LVL,
+    DEFAULT,
 }

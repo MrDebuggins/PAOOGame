@@ -1,52 +1,22 @@
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.time.LocalTime;
 
-public class Player extends GameObj
+public class Player extends GameObj implements Visitor
 {
     private static Player player = null;
 
     private double radius = 20;
     private double rotationAngle = 0;
-    private double[] velocity = {0, 0}; //x axis, y axis, rotation angle
+    private double[] velocity = {0, 0}; //x axis, y axis
     private double gravity = 0.3;
-
     private boolean isGrounded = false;
     private boolean[] btnStates = {false, false, false};
-    private boolean posUpdated = false;
+    private boolean posUpdated = false; //is set as true when collision detected in next frame, and is set as false when collision occurs
 
-    private Player()
+    Player()
     {
-        shape = new HitBox();
-        loadTexture(true);
-    }
-
-    public static Player getInstance()
-    {
-        if(player == null)
-            player = new Player();
-
-        return player;
-    }
-
-    private void loadTexture(boolean id)
-    {
-        shape.posx = 292;
-        shape.posy = 280;
-        shape.width = 40;
-        shape.height = 40;
-
-        if(id)
-        {
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            texture = tk.getImage("assets/player_small.png");
-        }
-        else
-        {
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            texture = tk.getImage("assets/player_big.png");
-        }
+        shape = new HitBox(292, 280, 40, 40);
+        type = Type.PLAYER_SMALL;
     }
 
     public void inputHandler(int eventType, KeyEvent e)
@@ -96,23 +66,20 @@ public class Player extends GameObj
 
     public void collisionHandler(Type type, HitBox h)
     {
-        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width)//vertical collision
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy + radius >= h.posy && shape.posy < h.posy)//obj's top collision
         {
-            if(shape.posy + radius >= h.posy && shape.posy < h.posy)//object top collision
-            {
-                isGrounded = true;
-                posUpdated = false;
-                if(velocity[1] > 4)
-                    velocity[1] *= -0.5;
-                else
-                    shape.posy = h.posy - radius;
-            }
-            else if(shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)//object bottom collision
-            {
-                shape.posy = h.posy + h.height + radius;
-                velocity[1] *= -0.6;
-                posUpdated = false;
-            }
+            isGrounded = true;
+            posUpdated = false;
+            if (velocity[1] > 4)
+                velocity[1] *= -0.5;
+            else
+                shape.posy = h.posy - radius;
+        }
+        else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)//obj's bottom collision
+        {
+            shape.posy = h.posy + h.height + radius;
+            velocity[1] *= -0.6;
+            posUpdated = false;
         }
         else if(shape.posy >= h.posy && shape.posy <= h.posy + h.height)//sides collision
         {
@@ -130,24 +97,31 @@ public class Player extends GameObj
             }
         }
         else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx, h.posy) <= radius && !posUpdated)//predict collision in next frame with top-left corner
-            predictCollision(h.posx, h.posy);
+            predictPointCollision(h.posx, h.posy);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy) <= radius+0.000001)//treat collision with top-left corner
-            cornerCollision(h.posx, h.posy);
+            pointCollision(h.posx, h.posy);
         else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx + h.width, h.posy) <= radius && !posUpdated)//predict collision with top-right corner
-            predictCollision(h.posx + h.width, h.posy);
+            predictPointCollision(h.posx + h.width, h.posy);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy) <= radius + 0.000001)//treat collision with top-right corner
-            cornerCollision(h.posx + h.width, h.posy);
+            pointCollision(h.posx + h.width, h.posy);
         else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-left corner
-            predictCollision(h.posx, h.posy+h.height);
+            predictPointCollision(h.posx, h.posy+h.height);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-left corner
-            cornerCollision(h.posx, h.posy + h.height);
+            pointCollision(h.posx, h.posy + h.height);
         else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx + h.width, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-right corner
-            predictCollision(h.posx + h.width, h.posy + h.height);
+            predictPointCollision(h.posx + h.width, h.posy + h.height);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-right corner
-            cornerCollision(h.posx + h.width, h.posy + h.height);
+            pointCollision(h.posx + h.width, h.posy + h.height);
     }
 
-    private void predictCollision(double x, double y)
+    /**
+     * Predict collision in next fram with point(x, y),
+     * if collision will occur, player position for next frame
+     * is set right in the place for collision.
+     * @param x
+     * @param y
+     */
+    private void predictPointCollision(double x, double y)
     {
         double dist = twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], x, y);
         double velocityMag = Math.sqrt(velocity[0]*velocity[0] + velocity[1]*velocity[1]);
@@ -163,7 +137,7 @@ public class Player extends GameObj
         posUpdated = true;
     }
 
-    private void cornerCollision(double x, double y)
+    private void pointCollision(double x, double y)
     {
         double vel2 = Math.sqrt(velocity[0]*velocity[0]+velocity[1]*velocity[1]);
         vel2 *= vel2;
@@ -182,6 +156,156 @@ public class Player extends GameObj
         velocity[1] = (v1+forcey-y);
 
         posUpdated = false;
+    }
+
+    public void visitBlockGroup(GameObj o)
+    {
+        HitBox h = o.getHitbox();
+
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy + radius >= h.posy && shape.posy < h.posy && (o.type != Type.TRIANGLE && o.type != Type.RTRIANGLE))//obj's top collision
+        {
+            isGrounded = true;
+            posUpdated = false;
+            if (velocity[1] > 4)
+                velocity[1] *= -0.5;
+            else
+                shape.posy = h.posy - radius;
+        }
+        else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)//obj's bottom collision
+        {
+            shape.posy = h.posy + h.height + radius;
+            velocity[1] *= -0.6;
+            posUpdated = false;
+        }
+        else if(shape.posy >= h.posy && shape.posy <= h.posy + h.height)//sides collision
+        {
+            if(shape.posx + radius >= h.posx - 1 && shape.posx < h.posx && velocity[0] > 0 && o.type != Type.RTRIANGLE)
+            {
+                velocity[0] = 0;
+                shape.posx = h.posx - radius;
+                posUpdated = false;
+            }
+            else if(shape.posx - radius <= h.posx + h.width + 1 && shape.posx > h.posx + h.width && velocity[0] < 0 && o.type != Type.TRIANGLE)
+            {
+                velocity[0] = 0;
+                shape.posx = h.posx + h.width + radius;
+                posUpdated = false;
+            }
+        }
+        else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx, h.posy) <= radius && !posUpdated)//predict collision in next frame with top-left corner
+            predictPointCollision(h.posx, h.posy);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy) <= radius+0.000001)//treat collision with top-left corner
+            pointCollision(h.posx, h.posy);
+        else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx + h.width, h.posy) <= radius && !posUpdated)//predict collision with top-right corner
+            predictPointCollision(h.posx + h.width, h.posy);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy) <= radius + 0.000001)//treat collision with top-right corner
+            pointCollision(h.posx + h.width, h.posy);
+        else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-left corner
+            predictPointCollision(h.posx, h.posy+h.height);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-left corner
+            pointCollision(h.posx, h.posy + h.height);
+        else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx + h.width, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-right corner
+            predictPointCollision(h.posx + h.width, h.posy + h.height);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-right corner
+            pointCollision(h.posx + h.width, h.posy + h.height);
+    }
+
+    public void visitGameObj(GameObj o)
+    {
+        HitBox h = o.getHitbox();
+
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy + radius >= h.posy && shape.posy < h.posy && (o.type != Type.TRIANGLE && o.type != Type.RTRIANGLE))//obj's top collision
+        {
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+        }
+        else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)//obj's bottom collision
+        {
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+        }
+        else if(shape.posy >= h.posy && shape.posy <= h.posy + h.height)//sides collision
+        {
+            if(shape.posx + radius >= h.posx - 1 && shape.posx < h.posx && velocity[0] > 0 && o.type != Type.RTRIANGLE)
+            {
+                if(o.type == Type.THORN)
+                    System.out.println("Got damage!");
+                else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                    switchShape(o.type);
+            }
+            else if(shape.posx - radius <= h.posx + h.width + 1 && shape.posx > h.posx + h.width && velocity[0] < 0 && o.type != Type.TRIANGLE)
+            {
+                if(o.type == Type.THORN)
+                    System.out.println("Got damage!");
+                else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                    switchShape(o.type);
+            }
+        }
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy) <= radius+0.000001)//treat collision with top-left corner
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy) <= radius + 0.000001)//treat collision with top-right corner
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-left corner
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-right corner
+            if(o.type == Type.THORN)
+                System.out.println("Got damage!");
+            else if(o.type == Type.DEFLATTER || o.type == Type.PUMPER)
+                switchShape(o.type);
+    }
+
+    public void visitDynamicObj(GameObj o)
+    {
+        HitBox h = o.getHitbox();
+
+        if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy + radius >= h.posy && shape.posy < h.posy && (o.type != Type.TRIANGLE && o.type != Type.RTRIANGLE))//obj's top collision
+        {
+            System.out.println("Got damage!");
+        }
+        else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy - radius <= h.posy + h.height + 1 && shape.posy > h.posy + h.height && velocity[1] < 0)//obj's bottom collision
+        {
+            System.out.println("Got damage!");
+        }
+        else if(shape.posy >= h.posy && shape.posy <= h.posy + h.height)//sides collision
+        {
+            if(shape.posx + radius >= h.posx - 1 && shape.posx < h.posx && velocity[0] > 0 && o.type != Type.RTRIANGLE)
+            {
+                System.out.println("Got damage!");
+            }
+            else if(shape.posx - radius <= h.posx + h.width + 1 && shape.posx > h.posx + h.width && velocity[0] < 0 && o.type != Type.TRIANGLE)
+            {
+                System.out.println("Got damage!");
+            }
+        }
+        else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx, h.posy) <= radius && !posUpdated)//predict collision in next frame with top-left corner
+            predictPointCollision(h.posx, h.posy);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy) <= radius+0.000001)//treat collision with top-left corner
+            System.out.println("Got damage!");
+        else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx + h.width, h.posy) <= radius && !posUpdated)//predict collision with top-right corner
+            predictPointCollision(h.posx + h.width, h.posy);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy) <= radius + 0.000001)//treat collision with top-right corner
+            System.out.println("Got damage!");
+        else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-left corner
+            predictPointCollision(h.posx, h.posy+h.height);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-left corner
+            System.out.println("Got damage!");
+        else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx + h.width, h.posy + h.height) <= radius && !posUpdated)//predict collision with bot-right corner
+            predictPointCollision(h.posx + h.width, h.posy + h.height);
+        else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy + h.height) <= radius + 0.000001)//treat collision with bot-right corner
+            System.out.println("Got damage!");
     }
 
     public void update()
@@ -216,14 +340,28 @@ public class Player extends GameObj
         }
     }
 
+    private void switchShape(Type t)
+    {
+        if(type == Type.PLAYER_SMALL && t == Type.PUMPER)
+        {
+            type = Type.PLAYER_BIG;
+            radius = 30;
+            shape.width = 60;
+            shape.height = 60;
+        }
+        else if(type == Type.PLAYER_BIG && t == Type.DEFLATTER)
+        {
+            type = Type.PLAYER_SMALL;
+            radius = 20;
+            shape.width = 40;
+            shape.height = 40;
+        }
+    }
+
     @Override
     public void render(Graphics g)
     {
-        Graphics2D g2d = (Graphics2D) g;
-        AffineTransform a = g2d.getTransform();    //save Graphics transform before rotating it
-        g2d.rotate(Math.toRadians(rotationAngle*1.5), shape.posx, shape.posy);
-        g2d.drawImage(texture, (int)shape.posx-shape.width/2, (int)shape.posy-shape.height/2, 40, 40, null);
-        g2d.setTransform(a);    //restore Graphics transform
+       TextureManager.renderTexture(g, type, shape, (int)rotationAngle);
     }
 
     public double twoPointsDist(double x1, double y1, double x2, double y2)
