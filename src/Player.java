@@ -114,6 +114,11 @@ public class Player extends GameObj implements Visitor
             pointCollision(h.posx + h.width, h.posy + h.height);
     }
 
+    private void collided(Type t, HitBox h)
+    {
+
+    }
+
     /**
      * Predict collision in next fram with point(x, y),
      * if collision will occur, player position for next frame
