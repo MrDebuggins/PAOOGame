@@ -13,29 +13,35 @@ public class GameObj implements Element
 
     public GameObj(Type type, HitBox h)
     {
-        setType(type);
+        this.type = type;
         shape = h;
     }
 
     public void render(Graphics g)
     {
-        if(active)
+        if(active || type == Type.CPOINT_CURRENT)
             TextureManager.renderTexture(g, type,shape, 0);
     }
 
     public void accept(Player p)
     {
-        if(active)
-            p.visitGameObj(this);
+
+        if(active && p.visitGameObj(this))
+            collided();
     }
+
     public void collided()
     {
+        active = false;
 
+        if(type == Type.CPOINT)
+        {
+            type = Type.CPOINT_CURRENT;
+            Level.setSpawn(this);
+        }
     }
 
-    public void setType(Type type){if(this.type == Type.DEFAULT){this.type = type;}}
-    public Type getType(){return type;}
-    public HitBox getHitbox(){return shape;}
+    //public HitBox getHitbox(){return shape;}
     public void update(){}
 }
 
@@ -45,17 +51,14 @@ enum Type
     PLAYER_BIG,
     BLOCK,
     BOUNCE_BLOCK,
-    TRIANGLE,
-    RTRIANGLE,
-    WATER,
     PUMPER,
     DEFLATTER,
     THORN,
     ENEMY,
-    CHECKPOINT1,
-    CHECKPOINT2,
+    CPOINT,
+    CPOINT_CURRENT,
     LIFE,
-    RING,
-    END_LVL,
+    RING_SMALL,
+    RING_BIG,
     DEFAULT,
 }

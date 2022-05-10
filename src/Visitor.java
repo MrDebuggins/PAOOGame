@@ -1,6 +1,7 @@
 public interface Visitor
 {
-    public void visitBlockGroup(GameObj o);
-    public void visitGameObj(GameObj o);
-    public void visitDynamicObj(GameObj o);
+    boolean visitBlockGroup(BlockGroup o);
+    boolean visitGameObj(GameObj o);
+    void visitDynamicObj(DynamicObj o);
+    boolean visitRing(Ring o);
 }

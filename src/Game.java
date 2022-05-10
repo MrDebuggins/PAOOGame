@@ -1,8 +1,7 @@
 import javax.swing.JPanel;
-import java.awt.*;
-
-import java.awt.event.*;
-import java.awt.geom.AffineTransform;
+import java.awt.Graphics;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 public class Game extends JPanel
 {
@@ -18,9 +17,7 @@ public class Game extends JPanel
 
         addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
+            public void keyTyped(KeyEvent e) {if(e.getKeyChar() == 'r')lvl.player.getDamage();}
 
             @Override
             public void keyPressed(KeyEvent e) {

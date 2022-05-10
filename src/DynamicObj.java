@@ -15,6 +15,12 @@ public class DynamicObj extends GameObj
         passedDist = 0;
     }
 
+    public void accept(Player p)
+    {
+        if(active)
+            p.visitDynamicObj(this);
+    }
+
     @Override
     public void update()
     {
