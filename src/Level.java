@@ -10,7 +10,7 @@ public class Level
     //private int spawnID = 0;
     private static GameObj spawnPoint = null;
 
-    private int groupsNr, staticObjsNr, dynamicObjsNr, ringsNr;
+    private static int groupsNr, staticObjsNr, dynamicObjsNr, ringsNr;
     private GameObj[] objects;
 
     public Level(int id)
@@ -180,6 +180,8 @@ public class Level
         spawnPoint = s;
     }
     public static HitBox getSpawn(){return spawnPoint.shape;}
+
+    public static int getRingsNr(){return ringsNr;}
 
     public void render(Graphics g)
     {

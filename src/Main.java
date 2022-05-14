@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Main
 {
@@ -13,6 +14,7 @@ public class Main
         game = new Game();
         game.setSize(f.getWidth(), f.getHeight());
         game.setFocusable(true);
+
         f.add(game);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);

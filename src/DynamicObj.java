@@ -22,7 +22,7 @@ public class DynamicObj extends GameObj
     }
 
     @Override
-    public void update()
+    public int update()
     {
         if(passedDist <= distance)
         {
@@ -42,5 +42,7 @@ public class DynamicObj extends GameObj
             passedDist = 0;
             speed *= -1;
         }
+
+        return 0;
     }
 }

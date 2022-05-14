@@ -1,9 +1,12 @@
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Player extends GameObj implements Visitor
 {
-    private double lifes = 3;
+    private int lifesCounter = 3;
+    private int ringsCounter = 0;
+    public JLabel life_t, lifes_c, ring_t, rings_c;
 
     private double radius = 20;
     private double rotationAngle = 0;
@@ -18,6 +21,30 @@ public class Player extends GameObj implements Visitor
     {
         shape = new HitBox(x, y, 40, 40);
         type = Type.PLAYER_SMALL;
+
+        life_t = new JLabel(new ImageIcon("assets/HUD_life.png"));
+        lifes_c = new JLabel("x3");
+        ring_t = new JLabel(new ImageIcon("assets/HUD_ring.png"));
+        rings_c = new JLabel("x0");
+
+        Dimension d = new Dimension(24, 24);
+
+        life_t.setMinimumSize(new Dimension(44, 44));
+        life_t.setPreferredSize(new Dimension(44, 44));
+        life_t.setMaximumSize(new Dimension(44, 44));
+        lifes_c.setMinimumSize(d);
+        lifes_c.setPreferredSize(d);
+        lifes_c.setMaximumSize(d);
+        lifes_c.setFont(new Font("Calibri", Font.BOLD, 24));
+        lifes_c.setVerticalAlignment(SwingConstants.TOP);
+        ring_t.setMinimumSize(new Dimension(18, 44));
+        ring_t.setPreferredSize(new Dimension(18, 44));
+        ring_t.setMaximumSize(new Dimension(18, 44));
+        rings_c.setMinimumSize(d);
+        rings_c.setPreferredSize(d);
+        rings_c.setMaximumSize(d);
+        rings_c.setFont(new Font("Calibri", Font.BOLD, 24));
+        rings_c.setVerticalAlignment(SwingConstants.TOP);
     }
 
     public void inputHandler(int eventType, KeyEvent e)
@@ -240,12 +267,15 @@ public class Player extends GameObj implements Visitor
                     getDamage();
                     return false;
                 }
-                case CPOINT -> {return true;}
-                default ->
+                case CPOINT ->
                 {
-                    return false;
+                    return true;
                 }
-                case LIFE -> {return true;}
+                case LIFE ->
+                {
+                    lifesCounter++;
+                    return true;
+                }
             }
         }
         return false;
@@ -297,22 +327,31 @@ public class Player extends GameObj implements Visitor
         }
         else
         {
-
-            if(shape.posy > h.posy + radius && shape.posy < h.posy + h.height - radius && Math.abs(shape.posx - h.posx) < 4)
-                return true;
-
             visitBlockGroup(new BlockGroup(Type.BLOCK, o.top));
             visitBlockGroup(new BlockGroup(Type.BLOCK, o.bot));
+
+            if(o.active && shape.posy > h.posy + radius && shape.posy < h.posy + h.height - radius && Math.abs(shape.posx - h.posx) < 4)
+            {
+                ringsCounter++;
+                return true;
+            }
         }
 
         return false;
     }
 
-    public void update()
+    public int update()
     {
-        if(posUpdatedCorner)
+        lifes_c.setText(Integer.toString(lifesCounter));
+        rings_c.setText(Integer.toString(ringsCounter));
+
+        if(ringsCounter == Level.getRingsNr())
+            return 1;
+        else if(lifesCounter == 0)
+            return 2;
+        else if(posUpdatedCorner)
         {
-            if(a > 2)
+            if(a > 1)
             {
                 posUpdatedCorner = false;
                 a = 0;
@@ -322,7 +361,7 @@ public class Player extends GameObj implements Visitor
         }
         else if(posUpdatedSurface)
         {
-            if(b > 2)
+            if(b > 1)
             {
                 posUpdatedSurface = false;
                 b = 0;
@@ -358,8 +397,9 @@ public class Player extends GameObj implements Visitor
 
             rotationAngle += velocity[0];
         }
-
         isGrounded = false;
+
+        return 0;
     }
 
     private void switchShape(Type t)
@@ -382,6 +422,8 @@ public class Player extends GameObj implements Visitor
 
     public void getDamage()
     {
+        lifesCounter--;
+
         velocity[0] = 0;
         velocity[1] = 0;
 

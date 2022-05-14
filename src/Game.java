@@ -1,5 +1,5 @@
-import javax.swing.JPanel;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
@@ -29,6 +29,13 @@ public class Game extends JPanel
                 lvl.player.inputHandler(1, e);
             }
         });
+
+        setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        add(lvl.player.life_t);
+        add(lvl.player.lifes_c);
+        add(lvl.player.ring_t);
+        add(lvl.player.rings_c);
     }
 
     @Override

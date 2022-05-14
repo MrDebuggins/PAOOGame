@@ -42,7 +42,7 @@ public class GameObj implements Element
     }
 
     //public HitBox getHitbox(){return shape;}
-    public void update(){}
+    public int update(){return 0;}
 }
 
 enum Type
