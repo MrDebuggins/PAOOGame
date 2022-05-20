@@ -1,58 +1,51 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
-public class Game extends JPanel
+public class Game extends State
 {
-    private Level lvl;
+    public static int lvlID = 0;
+    public static Level level;
     public TextureManager textureManager;
-    public static int width = 784;
-    public static int height = 361;
 
     Game() throws java.awt.HeadlessException
     {
         textureManager = new TextureManager();
-        lvl = new Level(1);
+        level = new Level(lvlID);
 
         addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {if(e.getKeyChar() == 'r')lvl.player.getDamage();}
+            public void keyTyped(KeyEvent e) {if(e.getKeyChar() == 'r') level.player.getDamage();}
 
             @Override
             public void keyPressed(KeyEvent e) {
-                lvl.player.inputHandler(0, e);
+                level.player.inputHandler(0, e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                lvl.player.inputHandler(1, e);
+                level.player.inputHandler(1, e);
             }
         });
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        add(lvl.player.life_t);
-        add(lvl.player.lifes_c);
-        add(lvl.player.ring_t);
-        add(lvl.player.rings_c);
+        add(level.player.life_t);
+        add(level.player.lifes_c);
+        add(level.player.ring_t);
+        add(level.player.rings_c);
     }
 
     @Override
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
-        lvl.render(g);
-    }
-
-    public void render()
-    {
-        repaint();
+        level.render(g);
     }
 
     public void update()
     {
-        lvl.update();
+        level.update();
         width = getWidth();
         height = getHeight();
     }
