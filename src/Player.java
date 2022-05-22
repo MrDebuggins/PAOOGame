@@ -346,9 +346,9 @@ public class Player extends GameObj implements Visitor
         rings_c.setText(Integer.toString(ringsCounter));
 
         if(ringsCounter == Level.getRingsNr())
-            return 1;
+            Main.switchState(5);
         else if(lifesCounter == 0)
-            return 2;
+            Main.switchState(4);
         else if(posUpdatedCorner)
         {
             if(a > 1)

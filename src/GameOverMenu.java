@@ -22,7 +22,7 @@ public class GameOverMenu extends State
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //reload lvl
+                Main.switchState(3);
             }
         });
         add(restart);
@@ -34,7 +34,7 @@ public class GameOverMenu extends State
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //switch state to main menu
+                Main.switchState(1);
             }
         });
         add(mainM);
@@ -56,6 +56,6 @@ public class GameOverMenu extends State
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g.drawImage(gameOver, (int)(width*0.5)-100, (int)(height*0.2), 200, 200, null);
+        g2d.drawImage(gameOver, (int)(width*0.5)-100, (int)(height*0.2), 200, 200, null);
     }
 }

@@ -9,6 +9,7 @@ public class Main
     public static boolean lol = false;
 
     public static Profile profile;
+    public static Game pauseCopy;
 
     public static void main(String[] args)
     {
@@ -42,6 +43,8 @@ public class Main
 
     public static void switchState(int next_state)
     {
+        if(next_state == 6)
+            pauseCopy = (Game) gameState;
         Container c = f.getContentPane();
         c.removeAll();
 
@@ -56,10 +59,24 @@ public class Main
                 gameState = new LvlMenu();
                 break;
             case 3:
-                gameState = new Game();
+                if(state == 6 && pauseCopy != null)
+                    gameState = pauseCopy;
+                else
+                    gameState = new Game();
+                break;
+            case 4:
+                gameState = new GameOverMenu();
+                break;
+            case 5:
+                gameState = new EndLvlMenu();
+                break;
+            case 6:
+                gameState = new PauseMenu();
                 break;
         }
+
         c.add(gameState);
+        gameState.requestFocusInWindow();
         f.validate();
         f.setVisible(true);
 

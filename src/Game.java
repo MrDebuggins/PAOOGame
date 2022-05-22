@@ -7,6 +7,7 @@ public class Game extends State
     public static int lvlID = 0;
     public static Level level;
     public TextureManager textureManager;
+    public static double time = 0;
 
     Game() throws java.awt.HeadlessException
     {
@@ -24,7 +25,10 @@ public class Game extends State
 
             @Override
             public void keyReleased(KeyEvent e) {
-                level.player.inputHandler(1, e);
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    Main.switchState(6);
+                else
+                    level.player.inputHandler(1, e);
             }
         });
 
@@ -48,5 +52,6 @@ public class Game extends State
         level.update();
         width = getWidth();
         height = getHeight();
+        time += 0.016;
     }
 }
