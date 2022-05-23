@@ -1,5 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +15,7 @@ public class LvlMenu extends State
     LvlMenu()
     {
         setLayout(null);
+        setBackground(Color.cyan);
 
         lvls = new JButton[3];
 
@@ -74,6 +79,15 @@ public class LvlMenu extends State
         });
 
         add(back);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        for(int i = 0; i < width; i+=50)
+            g2d.drawImage(bg, i, height-50, 50, 50, null);
     }
 
     public void update()

@@ -1,13 +1,11 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Container;
 
 public class Main
 {
     public static JFrame f;
     public static int state = 1;
     public static State gameState;
-    public static boolean lol = false;
-
     public static Profile profile;
     public static Game pauseCopy;
 

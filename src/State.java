@@ -1,12 +1,23 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.Image;
 
 abstract public class State extends JPanel
 {
     public static int width = 784;
     public static int height = 361;
+    protected static Image bg;
 
-    public void nextState(int c_state, int target_state){}
+    State()
+    {
+        if(bg == null)
+        {
+            Toolkit tk = Toolkit.getDefaultToolkit();
+            bg = tk.getImage("assets/ground_block.png");
+        }
+    }
+
     abstract public void update();
 
     @Override

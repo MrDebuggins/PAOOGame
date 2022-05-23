@@ -1,5 +1,9 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+import java.awt.Graphics;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 
 public class Player extends GameObj implements Visitor
@@ -29,22 +33,18 @@ public class Player extends GameObj implements Visitor
 
         Dimension d = new Dimension(24, 24);
 
-        life_t.setMinimumSize(new Dimension(44, 44));
-        life_t.setPreferredSize(new Dimension(44, 44));
-        life_t.setMaximumSize(new Dimension(44, 44));
-        lifes_c.setMinimumSize(d);
-        lifes_c.setPreferredSize(d);
-        lifes_c.setMaximumSize(d);
-        lifes_c.setFont(new Font("Calibri", Font.BOLD, 24));
-        lifes_c.setVerticalAlignment(SwingConstants.TOP);
-        ring_t.setMinimumSize(new Dimension(18, 44));
-        ring_t.setPreferredSize(new Dimension(18, 44));
-        ring_t.setMaximumSize(new Dimension(18, 44));
-        rings_c.setMinimumSize(d);
-        rings_c.setPreferredSize(d);
-        rings_c.setMaximumSize(d);
-        rings_c.setFont(new Font("Calibri", Font.BOLD, 24));
-        rings_c.setVerticalAlignment(SwingConstants.TOP);
+        life_t.setBounds(6, 5, 44, 44);
+        lifes_c.setBounds(50, 5, 44, 44);
+        ring_t.setBounds(100, 5, 18, 44);
+        rings_c.setBounds(150, 5, 44, 44);
+
+        lifes_c.setFont(new Font("Calibri", Font.BOLD, 28));
+        lifes_c.setVerticalAlignment(SwingConstants.CENTER);
+        lifes_c.setHorizontalAlignment(SwingConstants.CENTER);
+
+        rings_c.setFont(new Font("Calibri", Font.BOLD, 28));
+        rings_c.setVerticalAlignment(SwingConstants.CENTER);
+        rings_c.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
     public void inputHandler(int eventType, KeyEvent e)
@@ -85,7 +85,7 @@ public class Player extends GameObj implements Visitor
     }
 
     /**
-     * Predict collision in next fram with point(x, y),
+     * Predict collision in next frame with point(x, y),
      * if collision will occur, player position for next frame
      * is set right in the place for collision.
      * @param x
@@ -135,13 +135,11 @@ public class Player extends GameObj implements Visitor
                 {
                     shape.posx += -3;
                     velocity[0] *= -1;
-                    //velocity[1] = -1;
                 }
                 else if(shape.posx > x && velocity[0] < 0 && shape.posy > y)
                 {
                     shape.posx += 3;
                     velocity[0] *= -1;
-                    //velocity[1] = -1;
                 }
             }
 
@@ -178,11 +176,11 @@ public class Player extends GameObj implements Visitor
                 velocity[1] *= -0.5;
             return true;
         }
-        else if(velocity[1] != 0 && !posUpdatedSurface && !posUpdatedCorner && shape.posx+velocity[0] >= h.posx && shape.posx+velocity[0] <= h.posx + h.width && shape.posy+velocity[1] - radius <= h.posy + h.height && shape.posy+velocity[1] > h.posy + h.height && o.type.ordinal() > 1 && o.type.ordinal() < 6)//bottom collision in next frame
+        else if(velocity[1] < -4 && !posUpdatedSurface && !posUpdatedCorner && shape.posx+velocity[0] >= h.posx && shape.posx+velocity[0] <= h.posx + h.width && shape.posy+velocity[1] - radius <= h.posy + h.height && shape.posy+velocity[1] > h.posy + h.height)//bottom collision in next frame
         {
             double coef = (shape.posy - radius - h.posy - h.height)/velocity[1];
             shape.posy = h.posy + h.height + radius;
-            shape.posx += velocity[0] * coef;
+            shape.posx += velocity[0];
             posUpdatedSurface = true;
         }
         else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy - radius <= h.posy + h.height && shape.posy > h.posy + h.height && o.type.ordinal() > 1 && o.type.ordinal() < 6)//obj's bottom collision
@@ -351,7 +349,7 @@ public class Player extends GameObj implements Visitor
             Main.switchState(4);
         else if(posUpdatedCorner)
         {
-            if(a > 1)
+            if(a == 1)
             {
                 posUpdatedCorner = false;
                 a = 0;
@@ -369,7 +367,7 @@ public class Player extends GameObj implements Visitor
             else
                 b++;
         }
-        else if(!posUpdatedSurface)
+        else
         {
             if(!isGrounded && velocity[1] < 20)
                 velocity[1] = velocity[1] + gravity;

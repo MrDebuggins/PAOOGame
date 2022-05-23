@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Graphics;
 
 public class GameObj implements Element
 {
@@ -41,7 +41,6 @@ public class GameObj implements Element
         }
     }
 
-    //public HitBox getHitbox(){return shape;}
     public int update(){return 0;}
 }
 

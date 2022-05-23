@@ -1,9 +1,20 @@
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -20,6 +31,7 @@ public class MainMenu extends State
     MainMenu()
     {
         setLayout(null);
+        setBackground(Color.cyan);
 
         connectToDB();
 
@@ -53,7 +65,11 @@ public class MainMenu extends State
             boolean first = true;
             while (prof.next())
             {
-                selectProfile.addItem(new Profile(prof.getString("name"), prof.getInt("level")));
+                Profile p = new Profile(prof.getString("name"), prof.getInt("level"));
+                p.setRecord(0, prof.getDouble("lvl1"));
+                p.setRecord(1, prof.getDouble("lvl2"));
+                p.setRecord(2, prof.getDouble("lvl3"));
+                selectProfile.addItem(p);
 
                 if(first)
                 {
@@ -158,6 +174,15 @@ public class MainMenu extends State
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        for(int i = 0; i < width; i+=50)
+            g2d.drawImage(bg, i, height-50, 50, 50, null);
     }
 
     public void update()

@@ -1,5 +1,10 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +16,7 @@ public class GameOverMenu extends State
     GameOverMenu()
     {
         setLayout(null);
+        setBackground(Color.cyan);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
         gameOver = tk.getImage("assets/pop.png");
@@ -57,5 +63,7 @@ public class GameOverMenu extends State
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(gameOver, (int)(width*0.5)-100, (int)(height*0.2), 200, 200, null);
+        for(int i = 0; i < width; i+=50)
+            g2d.drawImage(bg, i, height-50, 50, 50, null);
     }
 }

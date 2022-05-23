@@ -1,7 +1,10 @@
-import com.sun.jdi.connect.spi.Connection;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.Toolkit;
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
@@ -15,7 +18,8 @@ public class EndLvlMenu extends State
 
     EndLvlMenu()
     {
-
+        setLayout(null);
+        setBackground(Color.cyan);
 
         if(Main.profile.getLvl() != 3 && Game.lvlID >= Main.profile.getLvl())
         {
@@ -34,11 +38,12 @@ public class EndLvlMenu extends State
             }
         }
 
-        Main.profile.setRecord(Game.lvlID, Game.time);
+        Game.time = (System.nanoTime() - Game.time)/1000000000;
+        Main.profile.setRecord(Game.lvlID - 1, Game.time);
         try
         {
             PreparedStatement pst = MainMenu.profilesDB.prepareStatement("UPDATE Profiles set lvl"+Game.lvlID+" = ? WHERE name = ?");
-            pst.setDouble(1, Main.profile.records[Game.lvlID]);
+            pst.setDouble(1, Main.profile.records[Game.lvlID-1]);
             pst.setString(2, Main.profile.toString());
             pst.execute();
         }
@@ -46,8 +51,6 @@ public class EndLvlMenu extends State
         {
             System.out.println(e.getMessage());
         }
-
-        setLayout(null);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
         logo = tk.getImage("assets/logo.png");
@@ -101,5 +104,7 @@ public class EndLvlMenu extends State
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(logo, (int)(width*0.5) - 240, 100, 480, 320, null);
+        for(int i = 0; i < width; i+=50)
+            g2d.drawImage(bg, i, height-50, 50, 50, null);
     }
 }

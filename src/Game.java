@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.FlowLayout;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
@@ -11,6 +12,8 @@ public class Game extends State
 
     Game() throws java.awt.HeadlessException
     {
+        time = System.nanoTime();
+
         textureManager = new TextureManager();
         level = new Level(lvlID);
 
@@ -32,7 +35,7 @@ public class Game extends State
             }
         });
 
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(null);
 
         add(level.player.life_t);
         add(level.player.lifes_c);

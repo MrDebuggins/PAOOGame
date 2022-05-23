@@ -1,5 +1,3 @@
-
-
 public class DynamicObj extends GameObj
 {
     private int distance, passedDist;

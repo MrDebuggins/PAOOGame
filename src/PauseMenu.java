@@ -1,5 +1,8 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,6 +14,9 @@ public class PauseMenu extends State
 
     PauseMenu()
     {
+        setLayout(null);
+        setBackground(Color.cyan);
+
         addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e)
@@ -69,6 +75,15 @@ public class PauseMenu extends State
         });
 
         add(back); add(restart); add(mainMenu);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g)
+    {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        for(int i = 0; i < width; i+=50)
+            g2d.drawImage(bg, i, height-50, 50, 50, null);
     }
 
     public void update()

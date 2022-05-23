@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -7,9 +7,7 @@ public class Level
 {
     public Player player;
     private Camera camera;
-    //private int spawnID = 0;
     private static GameObj spawnPoint = null;
-
     private static int groupsNr, staticObjsNr, dynamicObjsNr, ringsNr;
     private GameObj[] objects;
 
