@@ -1,8 +1,11 @@
+package Gameplay;
+
+import main.TextureManager;
 import java.awt.Graphics;
 
 public class BlockGroup extends GameObj
 {
-    public BlockGroup(Type type, HitBox h)
+    public BlockGroup(ObjType type, HitBox h)
     {
         this.type = type;
         shape = h;

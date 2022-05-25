@@ -1,3 +1,5 @@
+package UI;
+
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Toolkit;
@@ -9,7 +11,7 @@ abstract public class State extends JPanel
     public static int height = 361;
     protected static Image bg;
 
-    State()
+    public State()
     {
         if(bg == null)
         {

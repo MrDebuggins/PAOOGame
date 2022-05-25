@@ -1,5 +1,10 @@
+package Gameplay;
+
+import UI.State;
+import main.TextureManager;
+import main.Main;
+
 import java.awt.Graphics;
-import java.awt.FlowLayout;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
@@ -10,7 +15,7 @@ public class Game extends State
     public TextureManager textureManager;
     public static double time = 0;
 
-    Game() throws java.awt.HeadlessException
+    public Game()
     {
         time = System.nanoTime();
 

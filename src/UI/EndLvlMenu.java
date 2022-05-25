@@ -1,3 +1,8 @@
+package UI;
+
+import Gameplay.Game;
+import main.Main;
+
 import javax.swing.JButton;
 import java.awt.Toolkit;
 import java.awt.Image;
@@ -16,7 +21,7 @@ public class EndLvlMenu extends State
     private JButton next = null;
     private JButton mainMenu;
 
-    EndLvlMenu()
+    public EndLvlMenu()
     {
         setLayout(null);
         setBackground(Color.cyan);
@@ -42,7 +47,7 @@ public class EndLvlMenu extends State
         Main.profile.setRecord(Game.lvlID - 1, Game.time);
         try
         {
-            PreparedStatement pst = MainMenu.profilesDB.prepareStatement("UPDATE Profiles set lvl"+Game.lvlID+" = ? WHERE name = ?");
+            PreparedStatement pst = MainMenu.profilesDB.prepareStatement("UPDATE Profiles set lvl"+ Game.lvlID+" = ? WHERE name = ?");
             pst.setDouble(1, Main.profile.records[Game.lvlID-1]);
             pst.setString(2, Main.profile.toString());
             pst.execute();
@@ -59,7 +64,7 @@ public class EndLvlMenu extends State
         {
             next = new JButton("NEXT LEVEL");
             next.setFont(new Font("Calibri", Font.BOLD, 28));
-            next.setBounds((int)(width*0.2), (int)(height*0.8), 200, 40);
+            next.setBounds((int)(State.width*0.2), (int)(State.height*0.8), 200, 40);
             next.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e)
@@ -73,7 +78,7 @@ public class EndLvlMenu extends State
 
         mainMenu = new JButton("MAIN MENU");
         mainMenu.setFont(new Font("Calibri", Font.BOLD, 28));
-        mainMenu.setBounds((int)(width*0.8)-200, (int)(height*0.8), 200, 40);
+        mainMenu.setBounds((int)(State.width*0.8)-200, (int)(State.height*0.8), 200, 40);
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -86,16 +91,16 @@ public class EndLvlMenu extends State
 
     public void update()
     {
-        if(width != getWidth() || height != getHeight())
+        if(State.width != getWidth() || State.height != getHeight())
         {
-            width = getWidth();
-            height = getHeight();
+            State.width = getWidth();
+            State.height = getHeight();
         }
 
         if(next != null)
-            next.setBounds((int)(width*0.2), (int)(height*0.8), 200, 40);
+            next.setBounds((int)(State.width*0.2), (int)(State.height*0.8), 200, 40);
 
-        mainMenu.setBounds((int)(width*0.8)-200, (int)(height*0.8), 200, 40);
+        mainMenu.setBounds((int)(State.width*0.8)-200, (int)(State.height*0.8), 200, 40);
     }
 
     @Override
@@ -103,8 +108,8 @@ public class EndLvlMenu extends State
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(logo, (int)(width*0.5) - 240, 100, 480, 320, null);
-        for(int i = 0; i < width; i+=50)
-            g2d.drawImage(bg, i, height-50, 50, 50, null);
+        g2d.drawImage(logo, (int)(State.width*0.5) - 240, 100, 480, 320, null);
+        for(int i = 0; i < State.width; i+=50)
+            g2d.drawImage(State.bg, i, State.height-50, 50, 50, null);
     }
 }

@@ -1,3 +1,5 @@
+package Gameplay;
+
 public interface Visitor
 {
     boolean visitBlockGroup(BlockGroup o);

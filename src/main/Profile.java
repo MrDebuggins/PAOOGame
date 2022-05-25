@@ -1,10 +1,12 @@
+package main;
+
 public class Profile
 {
     private String name;
     private int lvl;
     public double[] records = {0,0,0};
 
-    Profile(String name, int lvl)
+    public Profile(String name, int lvl)
     {
         this.name = name;
         this.lvl = lvl;

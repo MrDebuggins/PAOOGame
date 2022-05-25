@@ -1,3 +1,5 @@
+package Gameplay;
+
 public class HitBox
 {
     public double posx, posy;

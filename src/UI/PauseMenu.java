@@ -1,3 +1,7 @@
+package UI;
+
+import main.Main;
+
 import javax.swing.JButton;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,7 +16,7 @@ public class PauseMenu extends State
 {
     private JButton back, restart, mainMenu;
 
-    PauseMenu()
+    public PauseMenu()
     {
         setLayout(null);
         setBackground(Color.cyan);
@@ -41,7 +45,7 @@ public class PauseMenu extends State
 
         back = new JButton("CONTINUE");
         back.setFont(new Font("Calibri", Font.BOLD, 28));
-        back.setBounds((int)(width*0.5)-100, (int)(height*0.3), 200, 40);
+        back.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.3), 200, 40);
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -52,7 +56,7 @@ public class PauseMenu extends State
 
         restart = new JButton("RESTART");
         restart.setFont(new Font("Calibri", Font.BOLD, 28));
-        restart.setBounds((int)(width*0.5)-100, (int)(height*0.5), 200, 40);
+        restart.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.5), 200, 40);
         restart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -64,7 +68,7 @@ public class PauseMenu extends State
 
         mainMenu = new JButton("MAIN MENU");
         mainMenu.setFont(new Font("Calibri", Font.BOLD, 28));
-        mainMenu.setBounds((int)(width*0.5)-100, (int)(height*0.7), 200, 40);
+        mainMenu.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.7), 200, 40);
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -82,20 +86,20 @@ public class PauseMenu extends State
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        for(int i = 0; i < width; i+=50)
-            g2d.drawImage(bg, i, height-50, 50, 50, null);
+        for(int i = 0; i < State.width; i+=50)
+            g2d.drawImage(State.bg, i, State.height-50, 50, 50, null);
     }
 
     public void update()
     {
-        if(width != getWidth() || height != getHeight())
+        if(State.width != getWidth() || State.height != getHeight())
         {
-            width = getWidth();
-            height = getHeight();
+            State.width = getWidth();
+            State.height = getHeight();
         }
 
-        back.setBounds((int)(width*0.5)-100, (int)(height*0.3), 200, 40);
-        restart.setBounds((int)(width*0.5)-100, (int)(height*0.5), 200, 40);
-        mainMenu.setBounds((int)(width*0.5)-100, (int)(height*0.7), 200, 40);
+        back.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.3), 200, 40);
+        restart.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.5), 200, 40);
+        mainMenu.setBounds((int)(State.width*0.5)-100, (int)(State.height*0.7), 200, 40);
     }
 }

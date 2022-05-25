@@ -1,3 +1,8 @@
+package Gameplay;
+
+import main.Main;
+import main.TextureManager;
+
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -24,7 +29,7 @@ public class Player extends GameObj implements Visitor
     Player(double x, double y)
     {
         shape = new HitBox(x, y, 40, 40);
-        type = Type.PLAYER_SMALL;
+        type = ObjType.PLAYER_SMALL;
 
         life_t = new JLabel(new ImageIcon("assets/HUD_life.png"));
         lifes_c = new JLabel("x3");
@@ -91,7 +96,7 @@ public class Player extends GameObj implements Visitor
      * @param x
      * @param y
      */
-    private void predictPointCollision(Type t, double x, double y)
+    private void predictPointCollision(ObjType t, double x, double y)
     {
             double dist = twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], x, y);
             double velocityMag = Math.sqrt(velocity[0]*velocity[0] + velocity[1]*velocity[1]);
@@ -108,7 +113,7 @@ public class Player extends GameObj implements Visitor
             posUpdatedCorner = true;
     }
 
-    private void pointCollision(Type t, double x, double y)
+    private void pointCollision(ObjType t, double x, double y)
     {
         if(!posUpdatedSurface)
         {
@@ -165,7 +170,7 @@ public class Player extends GameObj implements Visitor
             posUpdatedSurface = false;
             if(btnStates[2])
             {
-                if(o.type == Type.BOUNCE_BLOCK && velocity[1] > 4)
+                if(o.type == ObjType.BOUNCE_BLOCK && velocity[1] > 4)
                 {
                     velocity[1] *= -1.2;
                 }
@@ -229,7 +234,7 @@ public class Player extends GameObj implements Visitor
         HitBox h = o.shape;
         boolean collided = false;
 
-        if(o.type == Type.LIFE && twoPointsDist(shape.posx, shape.posy, h.posx + h.width/2, h.posy + h.height/2) <= radius + h.width/2)
+        if(o.type == ObjType.LIFE && twoPointsDist(shape.posx, shape.posy, h.posx + h.width/2, h.posy + h.height/2) <= radius + h.width/2)
             collided = true;
         else if(shape.posx >= h.posx && shape.posx <= h.posx + h.width && shape.posy + radius >= h.posy && shape.posy < h.posy)//obj's top collision
             collided = true;
@@ -308,7 +313,7 @@ public class Player extends GameObj implements Visitor
     {
         HitBox h = o.shape;
 
-        if(type == Type.PLAYER_BIG && o.type == Type.RING_SMALL && shape.posy > h.posy && shape.posy < h.posy + h.height)
+        if(type == ObjType.PLAYER_BIG && o.type == ObjType.RING_SMALL && shape.posy > h.posy && shape.posy < h.posy + h.height)
         {
                 if(velocity[0] > 0 && shape.posx + radius >= h.posx + h.width*0.5 + 3 && shape.posx + radius <= h.posx + h.width)
                 {
@@ -325,8 +330,8 @@ public class Player extends GameObj implements Visitor
         }
         else
         {
-            visitBlockGroup(new BlockGroup(Type.BLOCK, o.top));
-            visitBlockGroup(new BlockGroup(Type.BLOCK, o.bot));
+            visitBlockGroup(new BlockGroup(ObjType.BLOCK, o.top));
+            visitBlockGroup(new BlockGroup(ObjType.BLOCK, o.bot));
 
             if(o.active && shape.posy > h.posy + radius && shape.posy < h.posy + h.height - radius && Math.abs(shape.posx - h.posx) < 4)
             {
@@ -400,18 +405,18 @@ public class Player extends GameObj implements Visitor
         return 0;
     }
 
-    private void switchShape(Type t)
+    private void switchShape(ObjType t)
     {
-        if(type == Type.PLAYER_SMALL && t == Type.PUMPER)
+        if(type == ObjType.PLAYER_SMALL && t == ObjType.PUMPER)
         {
-            type = Type.PLAYER_BIG;
+            type = ObjType.PLAYER_BIG;
             radius = 30;
             shape.width = 60;
             shape.height = 60;
         }
-        else if(type == Type.PLAYER_BIG && t == Type.DEFLATTER)
+        else if(type == ObjType.PLAYER_BIG && t == ObjType.DEFLATTER)
         {
-            type = Type.PLAYER_SMALL;
+            type = ObjType.PLAYER_SMALL;
             radius = 20;
             shape.width = 40;
             shape.height = 40;

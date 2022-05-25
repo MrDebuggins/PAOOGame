@@ -1,3 +1,8 @@
+package UI;
+
+import main.Main;
+import main.Profile;
+
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -28,7 +33,7 @@ public class MainMenu extends State
     public static Connection profilesDB;
     private int selectedProfileLvl = 0;
 
-    MainMenu()
+    public MainMenu()
     {
         setLayout(null);
         setBackground(Color.cyan);
@@ -38,14 +43,14 @@ public class MainMenu extends State
         selectProfile = new JComboBox();
         selectProfile.addItem(new Profile("NEW GAME", 1));
         selectProfile.setFont(new Font("Calibri", Font.BOLD, 24));
-        selectProfile.setBounds((int)(width*0.1), 50, 300, 40);
+        selectProfile.setBounds((int)(State.width*0.1), 50, 300, 40);
 
-        String[] columns = {"Name", "Level 1", "Level 2", "Level 3"};
+        String[] columns = {"Name", "Game.Level 1", "Game.Level 2", "Game.Level 3"};
         Object[][] tst = {{"test", new TimeInSeconds(999), new TimeInSeconds(999), new TimeInSeconds(999)}};
         scores = new DefaultTableModel(tst, columns);
         scoreboard = new JTable(scores);
         scoreboard.setFont(new Font("Calibri", Font.PLAIN, 18));
-        scoreboard.setBounds((int)(width*0.9)-400, 50, 400, (int)(width*0.8)-50);
+        scoreboard.setBounds((int)(State.width*0.9)-400, 50, 400, (int)(State.width*0.8)-50);
         scoreboard.setDefaultEditor(Object.class, null);
         scoreboard.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         scoreboard.getColumnModel().getColumn(0).setPreferredWidth(220);
@@ -94,7 +99,7 @@ public class MainMenu extends State
 
         newGame = new JTextField(20);
         newGame.setFont(new Font("Calibri", Font.BOLD, 24));
-        newGame.setBounds((int)(width*0.1), 200, 300, 40);
+        newGame.setBounds((int)(State.width*0.1), 200, 300, 40);
         add(newGame);
 
         play = new JButton("PLAY");
@@ -156,7 +161,15 @@ public class MainMenu extends State
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                System.exit(0);
+                try
+                {
+                    profilesDB.close();
+                }
+                catch (SQLException exception)
+                {
+                    System.out.println(exception.getMessage());
+                }
+                Main.switchState(0);
             }
         });
         add(exit);
@@ -181,23 +194,23 @@ public class MainMenu extends State
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        for(int i = 0; i < width; i+=50)
-            g2d.drawImage(bg, i, height-50, 50, 50, null);
+        for(int i = 0; i < State.width; i+=50)
+            g2d.drawImage(State.bg, i, State.height-50, 50, 50, null);
     }
 
     public void update()
     {
-        if(width != getWidth() || height != getHeight())
+        if(State.width != getWidth() || State.height != getHeight())
         {
-            width = getWidth();
-            height = getHeight();
+            State.width = getWidth();
+            State.height = getHeight();
         }
 
-        selectProfile.setBounds((int)(width*0.1), 50, 300, 40);
-        scoreboard.setBounds((int)(width*0.9)-400, 50, 400, (int)(height*0.8)-10);
-        newGame.setBounds((int)(width*0.1), 150, 300, 40);
-        play.setBounds((int)(width*0.1), (int)(height*0.8), 100, 40);
-        exit.setBounds((int)(width*0.1)+200, (int)(height*0.8), 100, 40);
+        selectProfile.setBounds((int)(State.width*0.1), 50, 300, 40);
+        scoreboard.setBounds((int)(State.width*0.9)-400, 50, 400, (int)(State.height*0.8)-10);
+        newGame.setBounds((int)(State.width*0.1), 150, 300, 40);
+        play.setBounds((int)(State.width*0.1), (int)(State.height*0.8), 100, 40);
+        exit.setBounds((int)(State.width*0.1)+200, (int)(State.height*0.8), 100, 40);
     }
 
     public class TimeInSeconds

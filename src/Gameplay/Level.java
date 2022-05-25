@@ -1,3 +1,5 @@
+package Gameplay;
+
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +21,7 @@ public class Level
         else
         {
             System.out.println("Error loading game objects: No spawn point!");
-            spawnPoint = new GameObj(Type.CPOINT, new HitBox(300, 350, 40, 40));
+            spawnPoint = new GameObj(ObjType.CPOINT, new HitBox(300, 350, 40, 40));
             player = new Player(300, 350);
         }
 
@@ -57,52 +59,47 @@ public class Level
 
         objects = new GameObj[groupsNr + staticObjsNr + dynamicObjsNr + ringsNr];
 
-        int err;
-        err = loadGroups(scn);
-        if(err != 0)
-            return err;
-        err = loadStatics(scn);
-        if(err != 0)
-            return err;
-        err = loadDynamics(scn);
-        if(err != 0)
-            return err;
-        err = loadRings(scn);
-        if(err != 0)
-            return err;
-
+        try
+        {
+            loadGroups(scn);
+            loadStatics(scn);
+            loadDynamics(scn);
+            loadRings(scn);
+        }
+        catch (InvalidLevelObjecsNums e)
+        {
+            System.out.println(e.getMessage());
+        }
 
         return 0;
     }
 
-    private int loadGroups(Scanner scn)
+    private void loadGroups(Scanner scn) throws InvalidLevelObjecsNums
     {
-        if(groupsNr < 0)
-            return 1;
+        if(groupsNr < 1)
+            throw new InvalidLevelObjecsNums(1);
         else
         {
             int type;
             for(int i = 0; i < groupsNr; i++)
             {
                 type = scn.nextInt();
-                objects[i] = new BlockGroup(Type.values()[type], new HitBox(scn.nextInt(), scn.nextInt(), scn.nextInt(), scn.nextInt()));
+                objects[i] = new BlockGroup(ObjType.values()[type], new HitBox(scn.nextInt(), scn.nextInt(), scn.nextInt(), scn.nextInt()));
             }
         }
-
-        return 0;
     }
 
-    private int loadStatics(Scanner scn)
+    private void loadStatics(Scanner scn) throws InvalidLevelObjecsNums
     {
         if(staticObjsNr < 0)
-            return 2;
+            throw new InvalidLevelObjecsNums(2);
         else
         {
             int type;
             for(int i = groupsNr; i < groupsNr + staticObjsNr; i++)
             {
                 type = scn.nextInt();
-                objects[i] = new GameObj(Type.values()[type], new HitBox(scn.nextInt(), scn.nextInt(), scn.nextInt(), scn.nextInt()));
+                objects[i] = new GameObj(ObjType.values()[type], new HitBox(scn.nextInt(), scn.nextInt(), scn.nextInt(), scn.nextInt()));
 
                 if(type == 9)
                 {
@@ -110,14 +107,12 @@ public class Level
                 }
             }
         }
-
-        return 0;
     }
 
-    private int loadDynamics(Scanner scn)
+    private void loadDynamics(Scanner scn) throws InvalidLevelObjecsNums
     {
         if(dynamicObjsNr < 0)
-            return 3;
+            throw new InvalidLevelObjecsNums(3);
         else
         {
             for(int i = groupsNr + staticObjsNr; i < groupsNr + staticObjsNr + dynamicObjsNr; i++)
@@ -134,23 +129,20 @@ public class Level
                 objects[i] = new DynamicObj(h, dist, direction);
             }
         }
-
-        return 0;
     }
 
-    private int loadRings(Scanner scn)
+    private void loadRings(Scanner scn) throws InvalidLevelObjecsNums
     {
-        if(ringsNr < 0)
-            return 4;
+        if(ringsNr < 1)
+            throw new InvalidLevelObjecsNums(4);
         else
         {
             int type;
             for(int i = groupsNr + staticObjsNr + dynamicObjsNr; i < objects.length; i++)
             {
                 type = scn.nextInt();
-                objects[i] = new Ring(Type.values()[type], scn.nextInt(), scn.nextInt());
+                objects[i] = new Ring(ObjType.values()[type], scn.nextInt(), scn.nextInt());
             }
-            return 0;
         }
     }
 
@@ -174,7 +166,7 @@ public class Level
     public static void setSpawn(GameObj s)
     {
         spawnPoint.active = true;
-        spawnPoint.type = Type.CPOINT;
+        spawnPoint.type = ObjType.CPOINT;
         spawnPoint = s;
     }
     public static HitBox getSpawn(){return spawnPoint.shape;}
@@ -190,5 +182,39 @@ public class Level
 
         for(int i = objects.length - ringsNr; i < objects.length; i++)
             objects[i].render(g);
+    }
+
+    class InvalidLevelObjecsNums extends Exception
+    {
+        private int err;
+
+        InvalidLevelObjecsNums(int err)
+        {
+            super("Invalid level parameters.");
+            this.err = err;
+        }
+
+        @Override
+        public String getMessage()
+        {
+            String msg = super.getMessage();
+            switch (err)
+            {
+                case 1:
+                    msg += "Number of block groups can't be less than 1!";
+                    break;
+                case 2:
+                    msg += "Number of static objects can't be less than 0!";
+                    break;
+                case 3:
+                    msg += "Number of dynamic objects can't be less than 0!";
+                    break;
+                case 4:
+                    msg += "Number of rings can't be less than 1!";
+                    break;
+            }
+
+            return msg;
+        }
     }
 }

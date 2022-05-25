@@ -1,3 +1,8 @@
+package main;
+
+import Gameplay.Game;
+import UI.*;
+
 import javax.swing.JFrame;
 import java.awt.Container;
 

@@ -1,17 +1,20 @@
+package Gameplay;
+
+import main.TextureManager;
 import java.awt.Graphics;
 
 public class GameObj implements Element
 {
     protected HitBox shape;
-    protected Type type = Type.DEFAULT;
+    protected ObjType type = ObjType.DEFAULT;
     protected boolean active = true;
 
     public GameObj()
     {
-        type = Type.DEFAULT;
+        type = ObjType.DEFAULT;
     }
 
-    public GameObj(Type type, HitBox h)
+    public GameObj(ObjType type, HitBox h)
     {
         this.type = type;
         shape = h;
@@ -19,7 +22,7 @@ public class GameObj implements Element
 
     public void render(Graphics g)
     {
-        if(active || type == Type.CPOINT_CURRENT)
+        if(active || type == ObjType.CPOINT_CURRENT)
             TextureManager.renderTexture(g, type,shape, 0);
     }
 
@@ -34,30 +37,12 @@ public class GameObj implements Element
     {
         active = false;
 
-        if(type == Type.CPOINT)
+        if(type == ObjType.CPOINT)
         {
-            type = Type.CPOINT_CURRENT;
+            type = ObjType.CPOINT_CURRENT;
             Level.setSpawn(this);
         }
     }
 
     public int update(){return 0;}
-}
-
-enum Type
-{
-    PLAYER_SMALL,
-    PLAYER_BIG,
-    BLOCK,
-    BOUNCE_BLOCK,
-    PUMPER,
-    DEFLATTER,
-    THORN,
-    ENEMY,
-    CPOINT,
-    CPOINT_CURRENT,
-    LIFE,
-    RING_SMALL,
-    RING_BIG,
-    DEFAULT,
 }

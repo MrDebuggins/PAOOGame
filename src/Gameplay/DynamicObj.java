@@ -1,3 +1,5 @@
+package Gameplay;
+
 public class DynamicObj extends GameObj
 {
     private int distance, passedDist;
@@ -6,7 +8,7 @@ public class DynamicObj extends GameObj
 
     public DynamicObj(HitBox h, int d, boolean dir)
     {
-        type = Type.ENEMY;
+        type = ObjType.ENEMY;
         shape = h;
         distance = d;
         direction = dir;

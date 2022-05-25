@@ -1,3 +1,9 @@
+package main;
+
+import Gameplay.Camera;
+import Gameplay.HitBox;
+import Gameplay.ObjType;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -8,7 +14,7 @@ public class TextureManager
 {
     private static Image[] textures = new Image[19];
 
-    TextureManager()
+    public TextureManager()
     {
         Toolkit tk = Toolkit.getDefaultToolkit();
         textures[0] = tk.getImage("assets/player_small.png");
@@ -33,7 +39,7 @@ public class TextureManager
     }
 
     /**
-     * Draw object's texture with specified HitBox. If it is a player texture,
+     * Draw object's texture with specified Game.HitBox. If it is a player texture,
      * then rot is the rotation angle for texture.
      *  Texture is chosen automatically corresponding to type.
      * @param g Graphics of Component in which to draw
@@ -41,11 +47,11 @@ public class TextureManager
      * @param h hitbox of object
      * @param rot rotation angle(used only for player)
      */
-    public static void renderTexture(Graphics g, Type t, HitBox h, int rot)
+    public static void renderTexture(Graphics g, ObjType t, HitBox h, int rot)
     {
         Graphics2D g2d = (Graphics2D) g;
 
-        if(t == Type.PLAYER_SMALL || t == Type.PLAYER_BIG)
+        if(t == ObjType.PLAYER_SMALL || t == ObjType.PLAYER_BIG)
         {
             AffineTransform a = g2d.getTransform();    //save Graphics transform before rotating it
             g2d.rotate(Math.toRadians(rot*1.5), h.posx + Camera.xOffset, h.posy + Camera.yOffset);

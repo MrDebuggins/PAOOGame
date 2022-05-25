@@ -1,3 +1,5 @@
+package Gameplay;
+
 public class Camera
 {
     public static double xOffset, yOffset;

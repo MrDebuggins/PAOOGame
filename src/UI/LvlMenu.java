@@ -1,3 +1,8 @@
+package UI;
+
+import main.Main;
+import Gameplay.Game;
+
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Graphics;
@@ -12,7 +17,7 @@ public class LvlMenu extends State
     private JButton[] lvls;
     private JButton back;
 
-    LvlMenu()
+    public LvlMenu()
     {
         setLayout(null);
         setBackground(Color.cyan);
@@ -21,7 +26,7 @@ public class LvlMenu extends State
 
         lvls[0] = new JButton("1");
         lvls[0].setFont(new Font("Calibri", Font.BOLD, 28));
-        lvls[0].setBounds((int)(width*0.3), (int)(height*0.2), 50, 50);
+        lvls[0].setBounds((int)(State.width*0.3), (int)(State.height*0.2), 50, 50);
         lvls[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -46,7 +51,7 @@ public class LvlMenu extends State
                 }
             });
         }
-        lvls[1].setBounds((int)(width*0.5)-25, (int)(height*0.2), 50, 50);
+        lvls[1].setBounds((int)(State.width*0.5)-25, (int)(State.height*0.2), 50, 50);
 
         if(Main.profile.getLvl() < 3)
             lvls[2] = new JButton(new ImageIcon("assets/locked.png"));
@@ -63,13 +68,13 @@ public class LvlMenu extends State
                 }
             });
         }
-        lvls[2].setBounds((int)(width*0.7)-50, (int)(height*0.2), 50, 50);
+        lvls[2].setBounds((int)(State.width*0.7)-50, (int)(State.height*0.2), 50, 50);
 
         add(lvls[0]); add(lvls[1]); add(lvls[2]);
 
         back = new JButton("BACK");
         back.setFont(new Font("Calibri", Font.BOLD, 24));
-        back.setBounds((int)(width*0.5)-50, (int)(height*0.8), 100, 40);
+        back.setBounds((int)(State.width*0.5)-50, (int)(State.height*0.8), 100, 40);
         back.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -86,21 +91,21 @@ public class LvlMenu extends State
     {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        for(int i = 0; i < width; i+=50)
-            g2d.drawImage(bg, i, height-50, 50, 50, null);
+        for(int i = 0; i < State.width; i+=50)
+            g2d.drawImage(State.bg, i, State.height-50, 50, 50, null);
     }
 
     public void update()
     {
-        if(width != getWidth() || height != getHeight())
+        if(State.width != getWidth() || State.height != getHeight())
         {
-            width = getWidth();
-            height = getHeight();
+            State.width = getWidth();
+            State.height = getHeight();
         }
 
-            lvls[0].setBounds((int)(width*0.3), (int)(height*0.2), 50, 50);
-            lvls[1].setBounds((int)(width*0.5)-25, (int)(height*0.2), 50, 50);
-            lvls[2].setBounds((int)(width*0.7)-50, (int)(height*0.2), 50, 50);
-            back.setBounds((int)(width*0.5)-50, (int)(height*0.8), 100, 40);
+            lvls[0].setBounds((int)(State.width*0.3), (int)(State.height*0.2), 50, 50);
+            lvls[1].setBounds((int)(State.width*0.5)-25, (int)(State.height*0.2), 50, 50);
+            lvls[2].setBounds((int)(State.width*0.7)-50, (int)(State.height*0.2), 50, 50);
+            back.setBounds((int)(State.width*0.5)-50, (int)(State.height*0.8), 100, 40);
     }
 }
