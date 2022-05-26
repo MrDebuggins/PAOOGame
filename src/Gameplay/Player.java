@@ -260,21 +260,22 @@ public class Player extends GameObj implements Visitor
         {
             switch (o.type)
             {
-                case PUMPER, DEFLATTER ->
+                case PUMPER:
+                case DEFLATTER:
                 {
                     switchShape(o.type);
                     return false;
                 }
-                case THORN ->
+                case THORN:
                 {
                     getDamage();
                     return false;
                 }
-                case CPOINT ->
+                case CPOINT:
                 {
                     return true;
                 }
-                case LIFE ->
+                case LIFE:
                 {
                     livesCounter++;
                     return true;
