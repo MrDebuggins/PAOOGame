@@ -33,16 +33,16 @@ public class Ring extends GameObj
         if(active)
         {
             if(type == ObjType.RING_SMALL)
-                TextureManager.renderTexture(g, 11 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, (int)shape.width, (int)shape.height);
+                TextureManager.renderTexture(g, 11 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, shape.width, shape.height);
             else
-                TextureManager.renderTexture(g, 15 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, (int)shape.width, (int)shape.height);
+                TextureManager.renderTexture(g, 15 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, shape.width, shape.height);
         }
         else
         {
             if(type == ObjType.RING_SMALL)
-                TextureManager.renderTexture(g, 13 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, (int)shape.width, (int)shape.height);
+                TextureManager.renderTexture(g, 13 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, shape.width, shape.height);
             else
-                TextureManager.renderTexture(g, 17 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, (int)shape.width, (int)shape.height);
+                TextureManager.renderTexture(g, 17 + part - 1, (int)shape.posx + shape.width*((part-1)/2), (int)shape.posy, shape.width, shape.height);
         }
 
         if(part == 1)

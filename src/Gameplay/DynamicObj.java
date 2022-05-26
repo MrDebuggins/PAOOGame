@@ -31,11 +31,6 @@ public class DynamicObj extends GameObj
                 shape.posx += speed;
                 passedDist += Math.sqrt(speed*speed);
             }
-            else
-            {
-                shape.posy += speed;
-                passedDist += Math.sqrt(speed*speed);
-            }
         }
         else
         {
