@@ -13,9 +13,9 @@ import java.awt.event.KeyEvent;
 
 public class Player extends GameObj implements Visitor
 {
-    private int lifesCounter = 3;
+    private int livesCounter = 3;
     private int ringsCounter = 0;
-    public JLabel life_t, lifes_c, ring_t, rings_c;
+    public JLabel life_t, lives_c, ring_t, rings_c;
 
     private double radius = 20;
     private double rotationAngle = 0;
@@ -32,20 +32,20 @@ public class Player extends GameObj implements Visitor
         type = ObjType.PLAYER_SMALL;
 
         life_t = new JLabel(new ImageIcon("assets/HUD_life.png"));
-        lifes_c = new JLabel("x3");
+        lives_c = new JLabel("x3");
         ring_t = new JLabel(new ImageIcon("assets/HUD_ring.png"));
         rings_c = new JLabel("x0");
 
         Dimension d = new Dimension(24, 24);
 
         life_t.setBounds(6, 5, 44, 44);
-        lifes_c.setBounds(50, 5, 44, 44);
+        lives_c.setBounds(50, 5, 44, 44);
         ring_t.setBounds(100, 5, 18, 44);
         rings_c.setBounds(150, 5, 44, 44);
 
-        lifes_c.setFont(new Font("Calibri", Font.BOLD, 28));
-        lifes_c.setVerticalAlignment(SwingConstants.CENTER);
-        lifes_c.setHorizontalAlignment(SwingConstants.CENTER);
+        lives_c.setFont(new Font("Calibri", Font.BOLD, 28));
+        lives_c.setVerticalAlignment(SwingConstants.CENTER);
+        lives_c.setHorizontalAlignment(SwingConstants.CENTER);
 
         rings_c.setFont(new Font("Calibri", Font.BOLD, 28));
         rings_c.setVerticalAlignment(SwingConstants.CENTER);
@@ -96,7 +96,7 @@ public class Player extends GameObj implements Visitor
      * @param x
      * @param y
      */
-    private void predictPointCollision(ObjType t, double x, double y)
+    private void predictPointCollision(double x, double y)
     {
             double dist = twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], x, y);
             double velocityMag = Math.sqrt(velocity[0]*velocity[0] + velocity[1]*velocity[1]);
@@ -113,7 +113,7 @@ public class Player extends GameObj implements Visitor
             posUpdatedCorner = true;
     }
 
-    private void pointCollision(ObjType t, double x, double y)
+    private void pointCollision(double x, double y)
     {
         if(!posUpdatedSurface)
         {
@@ -210,21 +210,21 @@ public class Player extends GameObj implements Visitor
             }
         }
         else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx, h.posy) <= radius && !posUpdatedCorner && !posUpdatedSurface)//predict collision in next frame with top-left corner
-            predictPointCollision(o.type, h.posx, h.posy);
+            predictPointCollision(h.posx, h.posy);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy) <= radius+0.1)//treat collision with top-left corner
-        {pointCollision(o.type, h.posx, h.posy); return true;}
+        {pointCollision(h.posx, h.posy); return true;}
         else if(twoPointsDist(shape.posx + velocity[0], shape.posy + velocity[1], h.posx + h.width, h.posy) <= radius && !posUpdatedCorner && !posUpdatedSurface)//predict collision with top-right corner
-            predictPointCollision(o.type, h.posx + h.width, h.posy);
+            predictPointCollision(h.posx + h.width, h.posy);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy) <= radius + 0.1)//treat collision with top-right corner
-        {pointCollision(o.type, h.posx + h.width, h.posy); return true;}
+        {pointCollision(h.posx + h.width, h.posy); return true;}
         else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx, h.posy + h.height) <= radius && !posUpdatedCorner && !posUpdatedSurface)//predict collision with bot-left corner
-            predictPointCollision(o.type, h.posx, h.posy+h.height);
+            predictPointCollision(h.posx, h.posy+h.height);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx, h.posy + h.height) <= radius + 0.1)//treat collision with bot-left corner
-        {pointCollision(o.type, h.posx, h.posy + h.height); return true;}
+        {pointCollision(h.posx, h.posy + h.height); return true;}
         else if(twoPointsDist(shape.posx+velocity[0], shape.posy+velocity[1], h.posx + h.width, h.posy + h.height) <= radius && !posUpdatedCorner && !posUpdatedSurface)//predict collision with bot-right corner
-            predictPointCollision(o.type, h.posx + h.width, h.posy + h.height);
+            predictPointCollision(h.posx + h.width, h.posy + h.height);
         else if(twoPointsDist(shape.posx, shape.posy, h.posx + h.width, h.posy + h.height) <= radius + 0.1)//treat collision with bot-right corner
-        {pointCollision(o.type, h.posx + h.width, h.posy + h.height); return true;}
+        {pointCollision(h.posx + h.width, h.posy + h.height); return true;}
 
         return false;
     }
@@ -276,7 +276,7 @@ public class Player extends GameObj implements Visitor
                 }
                 case LIFE ->
                 {
-                    lifesCounter++;
+                    livesCounter++;
                     return true;
                 }
             }
@@ -345,12 +345,12 @@ public class Player extends GameObj implements Visitor
 
     public int update()
     {
-        lifes_c.setText(Integer.toString(lifesCounter));
+        lives_c.setText(Integer.toString(livesCounter));
         rings_c.setText(Integer.toString(ringsCounter));
 
         if(ringsCounter == Level.getRingsNr())
             Main.switchState(5);
-        else if(lifesCounter == 0)
+        else if(livesCounter == 0)
             Main.switchState(4);
         else if(posUpdatedCorner)
         {
@@ -425,7 +425,7 @@ public class Player extends GameObj implements Visitor
 
     public void getDamage()
     {
-        lifesCounter--;
+        livesCounter--;
 
         velocity[0] = 0;
         velocity[1] = 0;

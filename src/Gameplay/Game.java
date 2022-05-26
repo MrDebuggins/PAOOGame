@@ -43,7 +43,7 @@ public class Game extends State
         setLayout(null);
 
         add(level.player.life_t);
-        add(level.player.lifes_c);
+        add(level.player.lives_c);
         add(level.player.ring_t);
         add(level.player.rings_c);
     }
